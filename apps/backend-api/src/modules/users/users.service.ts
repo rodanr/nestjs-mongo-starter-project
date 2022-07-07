@@ -2,12 +2,15 @@ import {
   BadRequestException,
   Injectable,
   UnauthorizedException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
@@ -18,6 +21,7 @@ export class UsersService {
     const user = new this.UserModel({
       ...createUserDto,
       created_at: new Date(),
+      id: uuidv4(),
     });
     try {
       await user.save();
@@ -46,8 +50,22 @@ export class UsersService {
       message: 'Logged in successfully',
     };
   }
-  updateUser() {
-    return;
+  async updateUserById(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.UserModel.findOneAndUpdate(
+      {
+        id: id,
+      },
+      {
+        $set: updateUserDto,
+      },
+      {
+        new: true,
+      },
+    ).exec();
+    if (!user) {
+      throw new NotFoundException(`User ${id} not found`);
+    }
+    return user;
   }
   deleteUser() {
     return;

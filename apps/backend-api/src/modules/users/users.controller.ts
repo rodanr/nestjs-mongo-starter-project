@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Post, Headers, Patch } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -14,9 +15,12 @@ export class UsersController {
   loginUser(@Body() loginUserDto: LoginUserDto) {
     return this.usersService.loginUser(loginUserDto);
   }
-  @Post('update')
-  updateUser() {
-    return this.usersService.updateUser();
+  @Patch('update')
+  updateUserById(
+    @Headers('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.usersService.updateUserById(id, updateUserDto);
   }
   @Delete('delete')
   deleteUser() {
