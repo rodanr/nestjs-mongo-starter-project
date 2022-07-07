@@ -12,7 +12,7 @@ export class UsersService {
   async createUser(createUserDto: CreateUserDto) {
     const user = new this.UserModel({
       ...createUserDto,
-      create_at: new Date(),
+      created_at: new Date(),
     });
     try {
       await user.save();
