@@ -1,7 +1,12 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -29,8 +34,17 @@ export class UsersService {
       message: 'SignUp Successful',
     };
   }
-  loginUser() {
-    return;
+  async loginUser(loginUserDto: LoginUserDto) {
+    const user = await this.UserModel.findOne({
+      username: loginUserDto.username,
+      password: loginUserDto.password,
+    }).exec();
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    return {
+      message: 'Logged in successfully',
+    };
   }
   updateUser() {
     return;

@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Post } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -10,8 +11,8 @@ export class UsersController {
     return this.usersService.createUser(createUserDto);
   }
   @Post('login')
-  loginUser() {
-    return this.usersService.loginUser();
+  loginUser(@Body() loginUserDto: LoginUserDto) {
+    return this.usersService.loginUser(loginUserDto);
   }
   @Post('update')
   updateUser() {
