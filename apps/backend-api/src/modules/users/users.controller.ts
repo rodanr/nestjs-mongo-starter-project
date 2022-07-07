@@ -23,7 +23,7 @@ export class UsersController {
     return this.usersService.updateUserById(id, updateUserDto);
   }
   @Delete('delete')
-  deleteUser() {
-    return this.usersService.deleteUser;
+  deleteUser(@Headers('id') id: string) {
+    return this.usersService.deleteUser(id);
   }
 }
